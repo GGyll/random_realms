@@ -2,6 +2,9 @@
 
 Random Realms is a unique puzzle game that generates its story, puzzles, graphics, and audio using AI every time you play.
 
+
+![Screenshot from 2025-04-27 10-59-57](https://github.com/user-attachments/assets/bfec08b9-6b5f-47b2-9b1f-fdaf488d6b6d)
+
 **Learn about LLMs by playing and contributing to this project.**
 
 ## Setup:
