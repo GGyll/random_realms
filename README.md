@@ -13,7 +13,7 @@ Random Realms is a unique puzzle game that generates its story, puzzles, graphic
 2.  `cd Random-Realms`
 3.  `python -m venv venv && source venv/bin/activate` (*macOS/Linux*) or `venv\Scripts\activate` (*Windows*)
 4.  `pip install -r requirements.txt`
-5.  Get API keys from [Replicate](https://replicate.com/), [OpenRouter](https://openrouter.ai/), and [ElevenLabs](https://elevenlabs.io/).
+5.  Get API keys from [Replicate](https://replicate.com/), [OpenRouter](https://openrouter.ai/), and [ElevenLabs](https://try.elevenlabs.io/meljryj15ura).
 6.  Add these environment variables to the bottom .venv/bin/activate file:
     ```bash
     export OPENROUTER_API_KEY=YOUR_KEY
