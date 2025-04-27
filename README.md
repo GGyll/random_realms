@@ -21,7 +21,7 @@ Random Realms is a unique puzzle game that generates its story, puzzles, graphic
 
 ## Contribute:
 
-Check [invalid URL removed] for issues and feel free to submit improvements.
+Feel free to submit any improvements!
 
 ## Nightmare Mode:
 
