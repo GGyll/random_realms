@@ -6,7 +6,7 @@ Random Realms is a unique puzzle game that generates its story, puzzles, graphic
 
 ## Setup:
 
-1.  `git clone [<repository_url>](https://github.com/GGyll/random_realms)`
+1.  `git clone https://github.com/GGyll/random_realms`
 2.  `cd Random-Realms`
 3.  `python -m venv venv && source venv/bin/activate` (*macOS/Linux*) or `venv\Scripts\activate` (*Windows*)
 4.  `pip install -r requirements.txt`
