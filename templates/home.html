@@ -1,0 +1,180 @@
+<head>
+    <title>Choose AI</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        #fullscreen-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        #story-description {
+            font-size: 2rem;
+        }
+
+        #text-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 30vh;
+            text-align: center;
+        }
+
+        #actions-container {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            text-align: center;
+        }
+
+        #actions-container button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 2.5rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #actions-container button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <img id="fullscreen-image" src="" alt="Fullscreen Image" />
+
+    <div id="text-container">
+        <p id="description"></p>
+    </div>
+    <div id="actions-container">
+        <div id="action-buttons"></div>
+    </div>
+
+    <script>
+
+        const conversationHistory = []
+        let currentBackgroundAudio = null;
+        let currentVoiceAudio = null
+        async function fetchStory(action = "null") {
+            try {
+                let requestBody = { action: action, conversation_history: conversationHistory }
+                const requestOptions = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestBody)
+
+                }
+                const response = await fetch("/generate-story", requestOptions)
+                const data = await response.json()
+                console.log(data)
+
+                window.fetchedData = data
+
+                const continueButton = document.createElement("button")
+                continueButton.textContent = "Continue"
+                continueButton.addEventListener("click", () => {
+                    displayData(action)
+                })
+                const actionsContainer = document.getElementById("action-buttons")
+                actionsContainer.innerHTML = ""
+                actionsContainer.appendChild(continueButton)
+
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+        function displayData(action) {
+            const data = window.fetchedData
+            const descriptionElement = document.getElementById("description")
+            descriptionElement.textContent = ""
+
+            const imageElement = document.getElementById("fullscreen-image");
+            imageElement.src = `data:image/webp;base64,${data.image}`;
+
+            const actionsContainer = document.getElementById("action-buttons")
+            actionsContainer.innerHTML = ""
+            data.actions.forEach((action) => {
+                const button = document.createElement("button")
+                button.textContent = action
+                button.addEventListener("click", () => {
+                    fetchStory(action)
+                })
+                actionsContainer.appendChild(button)
+            })
+            if (currentBackgroundAudio) {
+                currentBackgroundAudio.pause();
+                currentBackgroundAudio.currentTime = 0;
+            }
+
+            if (currentVoiceAudio) {
+                currentVoiceAudio.pause();
+                currentVoiceAudio.currentTime = 0;
+            }
+            if (data.voice) {
+                currentVoiceAudio = new Audio(`data:audio/mpeg;base64,${data.voice}`)
+                currentVoiceAudio.play()
+                document.body.appendChild(currentVoiceAudio)
+            }
+
+            if (data.music) {
+                const currentMusicAudio = new Audio(`data:audio/mpeg;base64,${data.music}`)
+                currentMusicAudio.volume = 0.3;
+                currentMusicAudio.play()
+                currentMusicAudio.loop = true
+                document.body.appendChild(currentMusicAudio)
+            }
+
+
+            conversationHistory.push({
+                role: "game_master",
+                content: data.description
+            })
+            if (action) {
+                conversationHistory.push({ role: "player", content: action })
+            }
+            typeWriter(data.description, descriptionElement, 30);
+        }
+        function typeWriter(text, element, speed) {
+            let i = 0;
+            function typing() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typing, speed);
+                }
+            }
+            typing();
+        }
+
+
+
+        fetchStory()
+    </script>
